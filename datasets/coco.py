@@ -12,7 +12,8 @@ import torchvision
 from pycocotools import mask as coco_mask
 
 import datasets.transforms as T
-
+from PIL import Image
+import os
 
 class CocoDetection(torchvision.datasets.CocoDetection):
     def __init__(self, img_folder, ann_file, transforms, return_masks):
@@ -28,6 +29,10 @@ class CocoDetection(torchvision.datasets.CocoDetection):
         if self._transforms is not None:
             img, target = self._transforms(img, target)
         return img, target
+    
+    def _load_image(self, id: int) -> Image.Image:
+        path = self.coco.loadImgs(id)[0]["path"]
+        return Image.open(os.path.join(self.root, path)).convert("RGB")
 
 
 def convert_coco_poly_to_mask(segmentations, height, width):
