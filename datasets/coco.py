@@ -31,7 +31,7 @@ class CocoDetection(torchvision.datasets.CocoDetection):
         return img, target
     
     def _load_image(self, id: int) -> Image.Image:
-        path = self.coco.loadImgs(id)[0]["path"]
+        path = self.coco.loadImgs(id)[0]["path"].strip("/")
         return Image.open(os.path.join(self.root, path)).convert("RGB")
 
 
